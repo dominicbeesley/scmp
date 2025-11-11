@@ -21,6 +21,7 @@ output	RD_H_t		rd_h,
 output	WR_L_t		wr_l,
 output	WR_H_t		wr_h,
 output	ALU_OP_t	alu_op,
+output  logic		alu_hcy_suppress,	//bodge for decimal adds TODO: get rid and do 4-bit adder
 
 output  logic		bus_ADS_n,
 output  logic		bus_RD_n,
@@ -109,5 +110,6 @@ output	MCODE_t		mcode
 	assign wr_h = i_mcode.wr_h;
 	assign alu_op = (i_mcode.ctl[CTL_IX_LOGICOP])?{1'b0,op[5:3]}:i_mcode.alu_op;
 	assign mcode = i_mcode;
+	assign alu_hcy_suppress = i_mcode.alu_hcy_suppress;
 
 endmodule

@@ -78,6 +78,7 @@ output	logic		WR_n
 	logic	[7:0]				incr4_out;
 
 	ALU_OP_t				alu_op;
+	logic					alu_hcy_suppress;
 	logic	[7:0]				alu_Q;
 	logic					alu_cy;
 	logic					alu_hcy;		// half carry - TODO:get rid, move to 4 bit adder
@@ -104,11 +105,11 @@ output	logic		WR_n
 		.op(reg8_op_q),
 		.op2(D_i[7]),			//TODO: this is a bodge, use bus_rd_lo/hi to write into D in reads?
 		.zer(read_bus_lo == 8'd0),
-                .neg(read_bus_lo[7]),
-                .minus80(reg8_D_Q == 8'h80),
-                .cy(status_cy),
-                .hcy(status_hcy),
-                .alu_cy(alu_cy),
+        .neg(read_bus_lo[7]),
+        .minus80(reg8_D_Q == 8'h80),
+        .cy(status_cy),
+        .hcy(status_hcy),
+        .alu_cy(alu_cy),
 
 		.ld_l(ld_l),
 		.ld_h(ld_h),
@@ -117,6 +118,7 @@ output	logic		WR_n
 		.wr_l(write_bus_lo_src_oh),
 		.wr_h(write_bus_hi_src_oh),
 		.alu_op(alu_op),
+		.alu_hcy_suppress(alu_hcy_suppress),
 
 		.bus_ADS_n(ADS_n),
 		.bus_RD_n(RD_n),
@@ -269,6 +271,7 @@ output	logic		WR_n
 		.A(read_bus_lo),
 		.B(reg8_D_Q),
 		.HCy_i(status_hcy),
+		.HCy_suppress_i(alu_hcy_suppress),
 		.Cy_i(alu_cy_in),
 		.Ov_i(status_ov),
 		.res(alu_Q),
@@ -307,7 +310,7 @@ output	logic		WR_n
 			.D('{
 				8'hFF,
 				8'hA0,
-				8'hFA,
+				8'h0A,
 				8'h66,
 				rd_ea_l,
 				reg8_D_Q,
