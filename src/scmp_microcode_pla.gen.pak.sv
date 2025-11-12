@@ -96,6 +96,7 @@ const	LD_L_t	LD_L_D_ACC	= LD_L_D|LD_L_ACC;
 const	LD_L_t	LD_L_ACC_STAT_CYOV	= LD_L_ACC|LD_L_ST_CY|LD_L_ST_OV;
 const	LD_L_t	LD_L_ACC_STAT_CY	= LD_L_ACC|LD_L_ST_CY;
 const	LD_L_t	LD_L_D_ACC_STAT_CY	= LD_L_D|LD_L_ACC|LD_L_ST_CY;
+const	LD_L_t	LD_L_D_ST_CY	= LD_L_D|LD_L_ST_CY;
 const	LD_L_t	LD_L_EAM_ADDR	= LD_L_EAM|LD_L_ADDR;
 const	LD_L_t	LD_L_EXT_SOUT	= LD_L_EXT|LD_L_SOUT;
 // LD_H
@@ -193,15 +194,17 @@ typedef enum logic [2:0] {
 	WR_H_INCR4	= 3'b100
 } WR_H_t;
 // ALU_OP
-typedef logic [2:0] ALU_OP_t;
-const	ALU_OP_t	ALU_OP_NUL	= 3'b000;
-const	ALU_OP_t	ALU_OP_RRL	= 3'b001;
-const	ALU_OP_t	ALU_OP_AND	= 3'b010;
-const	ALU_OP_t	ALU_OP_OR	= 3'b011;
-const	ALU_OP_t	ALU_OP_XOR	= 3'b100;
-const	ALU_OP_t	ALU_OP_INC	= 3'b101;
-const	ALU_OP_t	ALU_OP_DEC	= 3'b110;
-const	ALU_OP_t	ALU_OP_ADD	= 3'b111;
+typedef logic [3:0] ALU_OP_t;
+const	ALU_OP_t	ALU_OP_NUL	= 4'b000;
+const	ALU_OP_t	ALU_OP_RRL	= 4'b001;
+const	ALU_OP_t	ALU_OP_AND	= 4'b010;
+const	ALU_OP_t	ALU_OP_OR	= 4'b011;
+const	ALU_OP_t	ALU_OP_XOR	= 4'b100;
+const	ALU_OP_t	ALU_OP_INC	= 4'b101;
+const	ALU_OP_t	ALU_OP_DEC	= 4'b110;
+const	ALU_OP_t	ALU_OP_ADD	= 4'b111;
+const	ALU_OP_t	ALU_OP_ADD_L	= 4'b1000;
+const	ALU_OP_t	ALU_OP_ADD_H	= 4'b1001;
 // ALU_CY_IN
 typedef logic [1:0] ALU_CY_IN_t;
 const	ALU_CY_IN_t	ALU_CY_IN_STATUS	= 2'b00;

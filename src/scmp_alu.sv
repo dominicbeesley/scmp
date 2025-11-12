@@ -54,6 +54,19 @@ output	logic		Cy_sgn_o		// this will be 1 for 8 bit adds where the B input was n
 			ALU_OP_NUL	:
 				res = B;
 
+			ALU_OP_ADD_L :
+			begin
+				{ i_HCy, res[3:0] } = A[3:0] + B[3:0] + { {3{1'b0}}, Cy_i };
+				res[7:4] = B[7:4];
+			end
+			ALU_OP_ADD_H :
+			begin
+				if (HCy_suppress_i) i_HCy = 'b0;
+				res[3:0] = B[3:0];
+				{ Cy_o, res[7:4] } = A[7:4] + B[7:4] + { {3{1'b0}}, i_HCy };
+				Ov_o = (B[7] ^~ A[7]) & (res[7] ^ A [7]);
+				Cy_sgn_o = B[7];
+			end
 			default	:
 				res = A;
 		endcase

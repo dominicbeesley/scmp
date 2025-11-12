@@ -108,7 +108,7 @@ output	MCODE_t		mcode
 	assign rd_h = i_mcode.rd_h;
 	assign wr_l = i_mcode.wr_l;
 	assign wr_h = i_mcode.wr_h;
-	assign alu_op = (i_mcode.ctl[CTL_IX_LOGICOP])?{1'b0,op[5:3]}:i_mcode.alu_op;
+	assign alu_op = (i_mcode.ctl[CTL_IX_LOGICOP])?{1'b0 , op[5:3]}:i_mcode.alu_op;
 	assign mcode = i_mcode;
 	assign alu_hcy_suppress = i_mcode.alu_hcy_suppress;
 
