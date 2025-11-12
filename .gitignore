@@ -19,3 +19,5 @@ perl/test.vh
 *.sublime-workspace
 *.bak
 *.out.sdc
+
+**/vunit_out/*
