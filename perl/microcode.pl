@@ -149,6 +149,7 @@ my $sz_pc;
 my @microcode=();
 my @branches=();
 my @decoder=();
+my @menmonics=();
 
 PARSE_M_LOOP:while (<$fh_in>) {
 	my $l = $_;
@@ -342,6 +343,12 @@ PARSE_M_LOOP:while (<$fh_in>) {
 	} elsif ($state == 2) {
 		# decode array
 
+		if ($l =~ /^\s*MNEMONICS=.*$/) {
+			$state = 3;	
+			next PARSE_M_LOOP;
+		}
+
+
 		if ($l =~ /([01-]{8})\s+(\w+)/) {
 			my ($pat, $lab) = ($1, $2);	
 			my $mas = $pat =~ tr/01-/110/r;	
@@ -352,6 +359,23 @@ PARSE_M_LOOP:while (<$fh_in>) {
 				mask => oct ("0b$mas"),
 				xor => oct ("0b$xor")
 			};
+		}
+
+	} elsif ($state == 3) {
+		# opcode array
+
+		if ($l =~ /([01-]{8})\s+(\w+)/) {
+			my ($pat, $lab) = ($1, $2);	
+			my $mas = $pat =~ tr/01-/110/r;	
+			my $xor = $pat =~ tr/01-/010/r;	
+
+			push @menmonics, {
+				lab => $lab,
+				mask => oct ("0b$mas"),
+				xor => oct ("0b$xor")
+			};
+		} else {
+			die "bad opocode line : $l";
 		}
 
 	} else {
@@ -424,7 +448,7 @@ printf "largest branch : %d : %s\n", $big_bra, $big_bra_desc;
 
 # report the decoder array as a table of microop labels
 
-print "opcodes to micrcode lables table\n";
+print "menmonics to micrcode lables table\n";
 print "m\\l|";
 foreach my $c (0..15) {
 	printf "   %1x |", $c;
@@ -449,6 +473,23 @@ foreach my $r (0..15) {
 		$fnd =~ s/FETCH/-/;
 
 		printf "%5s|", $fnd;
+
+	}
+	print "\n   |";
+
+	foreach my $c (0..15) {
+		my $opc = ($r << 4) + $c;
+
+		my $fndop;
+		# find in menmonics table
+		DD2:foreach my $d (@menmonics) {
+			if ((($opc ^ $d->{xor}) & $d->{mask}) == 0) {
+				$fndop = $d->{lab};
+				last DD2; 
+			}
+		}
+
+		printf "%5s|", $fndop;
 
 	}
 	print "\n";
