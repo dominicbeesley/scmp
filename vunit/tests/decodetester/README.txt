@@ -1,0 +1,1 @@
+Run a program at reset and output as a dump file suitable for Hoglet's decoder "6502decode".
