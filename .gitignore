@@ -13,6 +13,7 @@ asm/*/*.lst
 asm/*/*.map
 asm/*/*.rel
 asm/*/*.vhx
+asm/*/*.hd
 perl/test.v
 perl/test.vh
 *.sublime-project

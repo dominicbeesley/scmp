@@ -1,10 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 for prog in decimal_add_test nop_test
 do
     asl -cpu sc/mp ${defs} -L ${prog}.asm &&
     p2bin ${prog} &&
     p2hex ${prog} ${prog}.ihx -F Intel -l 32 &&
+    hexdump -v -e '1/1 "%02x\n"' ${prog}.bin > ${prog}.hd
     rm ${prog}.p
     # Hack into a BASIC loader
     echo
