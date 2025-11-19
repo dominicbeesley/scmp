@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-for prog in decimal_add_test nop_test
+for prog in decimal_add_test nop_test nop_test_0001
 do
     asl -cpu sc/mp ${defs} -L ${prog}.asm &&
     p2bin ${prog} &&
