@@ -6,18 +6,18 @@
 module tb_example;
 
    localparam cpu_clk_period = 125;
-   localparam progname = "../../../../../asm/test/decimal_add_test.hd";
+   localparam progname = "../../../../../asm/test/nop_test_0001.hd";
    localparam dumpname = "./dump.bin"; // this will be loaded at location 0001
 
    
-   logic [7:0] mem [65535:0] ;
+   bit [7:0] mem [65535:0] = '{default :'0};
 
 
    logic cpu_rst_n = 1'b0;
    logic cpu_clk = 1'b0;
    logic [7:0] cpu_D_i;
-   logic cpu_sb_i;
-   logic cpu_sa_i;
+   logic cpu_sb_i = 1'b0;
+   logic cpu_sa_i = 1'b0;
    logic [11:0] cpu_addr;
    logic [7:0] cpu_D_o;
    logic [7:0] cpu_D_o_delay;
@@ -82,7 +82,15 @@ module tb_example;
                cpu_rst_n <= 'b0;
                # 20us;
                cpu_rst_n <= 'b1;
-               # 2000us;
+
+               // wait for a halt opcode
+
+               @(negedge cpu_clk && !cpu_ADS_n && (cpu_D_o & 8'b10000000));
+
+               $display(" %0t",$realtime);
+               $display("HALT");
+
+               # 100us;
             end
             begin
                while(1) begin
@@ -105,7 +113,7 @@ module tb_example;
 
                end
             end
-         join
+         join_any
 
          $fclose(f_o);
 
