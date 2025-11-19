@@ -9,9 +9,9 @@ output	logic			op_dly
 	always_comb begin
 		op_dly <= 1'b0;
 		if (((op ^ 8'b11001100) & 8'b11111111) == 8'b00000000)
-			op_pc <= UCLBL_ILL;
+			op_pc <= UCLBL_ILLEGAL;
 		else if (((op ^ 8'b01001000) & 8'b11111111) == 8'b00000000)
-			op_pc <= UCLBL_ILL;
+			op_pc <= UCLBL_ILLEGAL;
 		else if (((op ^ 8'b00000000) & 8'b11111111) == 8'b00000000)
 			op_pc <= UCLBL_HALT;
 		else if (((op ^ 8'b10001111) & 8'b11111111) == 8'b00000000)

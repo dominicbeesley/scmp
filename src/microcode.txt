@@ -205,7 +205,7 @@ CODESTART=7
 
 #NOTE: FETCH MUST be the first line!
 RESET:
-ILL:
+ILLEGAL:
 FETCH:		LD_L=ADDR_PC, LD_H=ADDR_PC, RD_L=P0, RD_H=P0, WR_L=ALU, WR_H=INCR4, ALU_OP=INC
 		BUS=ADSOP
 		NEXTPC=@DECODE, COND_MASK=OP2, COND_XOR=OP2, CTL=COND_JMP, BUS=RD, LD_L=OP
@@ -356,8 +356,8 @@ RRL:	NEXTPC=FETCH, ALU_CY_IN=STATUS, ALU_OP=RRL, RD_L=ACC, WR_L=ALU, LD_L=ACC_ST
 DECODER=
 
 #ILLEGALS
-11001100	ILL		# store and modify pc, others allowed but branch thru to their immediate equivalents
-01001000	ILL		# STE or possible XAE position
+11001100	ILLEGAL		# store and modify pc, others allowed but branch thru to their immediate equivalents
+01001000	ILLEGAL		# STE or possible XAE position
 
 #VALIDS
 
