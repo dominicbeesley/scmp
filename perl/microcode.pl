@@ -471,6 +471,7 @@ foreach my $r (0..15) {
 		}
 		
 		$fnd =~ s/FETCH/-/;
+		$fnd =~ s/ILLEGAL/!!!/;
 
 		printf "%5s|", $fnd;
 
