@@ -1,0 +1,1 @@
+Repeatedly reset and run small program terminated by a different opcode for each of 256 opcodes and output as a dump file
