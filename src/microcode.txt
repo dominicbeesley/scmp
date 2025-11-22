@@ -210,7 +210,7 @@ FETCH:		LD_L=ADDR_PC, LD_H=ADDR_PC, RD_L=P0, RD_H=P0, WR_L=ALU, WR_H=INCR4, ALU_
 		NEXTPC=@DECODE, COND_MASK=OP2, COND_XOR=OP2, CTL=COND_JMP, BUS=RD, LD_L=OP
 		NEXTPC=NEXT	# DMB: Add dead cycle
 		LD_L=ADDR_PC, LD_H=ADDR_PC, RD_L=P0, RD_H=P0, WR_L=ALU, WR_H=INCR4, ALU_OP=INC
-		BUS=ADSRDOP2
+		BUS=ADSRDOP2	# TODO: make this set delay flag in ADS cycle
 		BUS=RD, LD_L=D
 DECODE:		CTL=DECODE #decode step will jump to the instruction see scmp_microcode_oppc.sv
 

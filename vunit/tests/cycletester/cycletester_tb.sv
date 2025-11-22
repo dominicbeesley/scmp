@@ -90,6 +90,7 @@ module tb_example;
                   mem[3] = 8;
                   mem[4] = 8;
                   mem[5] = op[7:0];
+                  mem[6] = 0;
 
                   cpu_rst_n <= 1'b1;
 

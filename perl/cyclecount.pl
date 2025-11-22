@@ -25,6 +25,9 @@ use constant D_M_D => 0x40;
 use constant D_M_H => 0x80;
 
 my @opcodes = (
+    {   match=> 0b01001000, mask => 0b11111111, mne => "_"  }, 
+    {   match=> 0b11001100, mask => 0b11111111, mne => "_"  }, 
+    {   match=> 0b10001111, mask => 0b11111111, mne => "DLY"  }, 
     {   match=> 0b11000100, mask => 0b11111111, mne => "LDI"  }, 
     {   match=> 0b11010100, mask => 0b11111111, mne => "ANI"  }, 
     {   match=> 0b11011100, mask => 0b11111111, mne => "ORI"  }, 
@@ -47,7 +50,6 @@ my @opcodes = (
     {   match=> 0b10011000, mask => 0b11111100, mne => "JZ"  }, 
     {   match=> 0b10011100, mask => 0b11111100, mne => "JNZ"  }, 
     {   match=> 0b01000000, mask => 0b11111111, mne => "LDE"  }, 
-    {   match=> 0b01001000, mask => 0b11111111, mne => "_"  }, 
     {   match=> 0b01010000, mask => 0b11111111, mne => "ANE"  }, 
     {   match=> 0b01011000, mask => 0b11111111, mne => "ORE"  }, 
     {   match=> 0b01100000, mask => 0b11111111, mne => "XRE"  }, 
@@ -80,7 +82,10 @@ sub op($) {
 
     foreach my $od (@opcodes) {
         if (!(($i & $od->{mask}) ^ $od->{match})) {
-            $ret = $od->{mne};
+            if ($od->{mne} ne "_") {
+                $ret = $od->{mne};
+            }
+            last;
         }
     }
 
@@ -125,7 +130,11 @@ sub range(@) {
         }
 
         if ($first > 0 && ($v < 0 || $v != $prev + 1)) {
-            push @ret, sprintf("%02X-%02X", $first, $prev);
+            if ($first == $prev) {
+                push @ret, sprintf("%02X", $first);    
+            } else {
+                push @ret, sprintf("%02X-%02X", $first, $prev);        
+            }
 
             if ($v >= 0) {
                 $first =$v;
@@ -150,7 +159,11 @@ sub range(@) {
 
     if ($first >=0)
     {
-        push @ret, sprintf("%02X-%02X", $first, $prev);        
+        if ($first == $prev) {
+            push @ret, sprintf("%02X", $first);    
+        } else {
+            push @ret, sprintf("%02X-%02X", $first, $prev);        
+        }
     }
 
     return @ret;
