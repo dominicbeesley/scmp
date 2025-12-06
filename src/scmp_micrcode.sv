@@ -4,6 +4,7 @@ module scmp_microcode (
 
 input	logic		rst_n,
 input	logic		clk,
+input	logic		clken,
 input	logic[7:0]	op,
 input	logic		op2,		//set by D_i[7] during opcode read
 input	logic		zer,		//set when read bus lo == 0
@@ -69,7 +70,7 @@ output	MCODE_t		mcode
 			mc_pc <= 'd0;
 			mc_ret <= 'd0;
 		end
-		else
+		else if (clken)
 		begin			
 			if (i_mcode.ctl[CTL_IX_DECODE]) 
 				mc_pc <= op_pc;

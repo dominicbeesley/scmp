@@ -4,6 +4,7 @@ import scmp_microcode_pak::*;
 module scmp
 (
 input	logic		clk,
+input   logic		clken,
 input	logic		rst_n,
 input	logic	[7:0]	D_i,
 input	logic		sb,
@@ -102,6 +103,7 @@ output	logic		WR_n
 	scmp_microcode microcode (
 		.rst_n(rst_n),
 		.clk(clk),
+		.clken(clken),
 		.op(reg8_op_q),
 		.op2(D_i[7]),			//TODO: this is a bodge, use bus_rd_lo/hi to write into D in reads?
 		.zer(read_bus_lo == 8'd0),
@@ -141,7 +143,7 @@ output	logic		WR_n
 			status_f1 <= 1'b0;
 			status_f0 <= 1'b0;
 		end
-		else begin
+		else if (clken) begin
 			if (mcode.ctl[CTL_IX_IEOP0])
 				status_ie <= reg8_op_q[0];
 			else if (mcode.ctl[CTL_IX_CYOP0])
@@ -169,6 +171,7 @@ output	logic		WR_n
 
 	reg8 reg8_D (
 				.clk(clk),
+				.clken(clken),
 				.rst_n(rst_n),
 				.D((RD_n==1'b0)?D_i:write_bus_lo),
 				.ctl_ld(ld_l[LD_L_IX_D]),
@@ -177,6 +180,7 @@ output	logic		WR_n
 
 	reg8 reg8_ACC (
 				.clk(clk),
+				.clken(clken),
 				.rst_n(rst_n),
 				.D(write_bus_lo),
 				.ctl_ld(ld_l[LD_L_IX_ACC]),
@@ -185,6 +189,7 @@ output	logic		WR_n
 
 	reg8 reg8_EXT (
 				.clk(clk),
+				.clken(clken),
 				.rst_n(rst_n),
 				.D(write_bus_lo),
 				.ctl_ld(ld_l[LD_L_IX_EXT]),
@@ -194,6 +199,7 @@ output	logic		WR_n
 
 	reg8 reg8_OP (
 				.clk(clk),
+				.clken(clken),
 				.rst_n(rst_n),
 				.D(D_i),
 				.ctl_ld(ld_l[LD_L_IX_OP]),
@@ -208,6 +214,7 @@ output	logic		WR_n
 		for (gi=0; gi < 4; gi = gi + 1) begin : gen_pregs
 			reg8 reg_p_h (
 				.clk(clk),
+				.clken(clken),
 				.rst_n(rst_n),
 				.D(write_bus_hi),
 				.ctl_ld(
@@ -223,6 +230,7 @@ output	logic		WR_n
 				);
 			reg8 reg_p_l (
 				.clk(clk),
+				.clken(clken),
 				.rst_n(rst_n),
 				.D(write_bus_lo),
 				.ctl_ld(
@@ -242,6 +250,7 @@ output	logic		WR_n
 	//address register
 	reg8 reg_addr_h (
 			.clk(clk),
+			.clken(clken),
 			.rst_n(rst_n),
 			.D(write_bus_hi),
 			.ctl_ld(ld_h[LD_H_IX_ADDR]),
@@ -249,6 +258,7 @@ output	logic		WR_n
 		);
 	reg8 reg_addr_l (
 			.clk(clk),
+			.clken(clken),
 			.rst_n(rst_n),
 			.D(write_bus_lo),
 			.ctl_ld(ld_l[LD_L_IX_ADDR]),
@@ -384,8 +394,9 @@ output	logic		WR_n
 	assign	sout = r_sout;
 
 	always_ff @(posedge clk) begin
-		if (ld_l[LD_L_IX_SOUT])
-			r_sout <= alu_cy;
+		if (clken)
+			if (ld_l[LD_L_IX_SOUT])
+				r_sout <= alu_cy;
 	end
 
 

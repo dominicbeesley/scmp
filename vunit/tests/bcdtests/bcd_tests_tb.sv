@@ -117,6 +117,7 @@ module tb_example;
    (
       .rst_n(cpu_rst_n),
       .clk(cpu_clk),
+      .clken(1'b1),
       .D_i(cpu_D_i),
       .sb(cpu_sb_i),
       .sa(cpu_sa_i),

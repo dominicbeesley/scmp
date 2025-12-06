@@ -13,19 +13,20 @@ module tb_example;
    bit [7:0] mem [65535:0] = '{default :'0};
 
 
-   logic cpu_rst_n = 1'b0;
-   logic cpu_clk = 1'b0;
-   logic [7:0] cpu_D_i;
-   logic cpu_sb_i = 1'b0;
-   logic cpu_sa_i = 1'b0;
-   logic [11:0] cpu_addr;
-   logic [7:0] cpu_D_o;
-   logic [7:0] cpu_D_o_delay;
-   logic cpu_f0;
-   logic cpu_f1;
-   logic cpu_f2;
-   logic sin;
-   logic sout;
+   logic       cpu_rst_n = 1'b0;
+   logic       cpu_clk = 1'b0;
+   reg [3:0]   cpu_div_ring = 4'b0001;
+   logic       [7:0] cpu_D_i;
+   logic       cpu_sb_i = 1'b0;
+   logic       cpu_sa_i = 1'b0;
+   logic       [11:0] cpu_addr;
+   logic       [7:0] cpu_D_o;
+   logic       [7:0] cpu_D_o_delay;
+   logic       cpu_f0;
+   logic       cpu_f1;
+   logic       cpu_f2;
+   logic       sin;
+   logic       sout;
 
    logic cpu_ADS_n;
    logic cpu_RD_n;
@@ -153,10 +154,17 @@ module tb_example;
       cpu_clk <= ! cpu_clk;
    end
 
+   always @(posedge cpu_clk) begin
+      cpu_div_ring <= { cpu_div_ring[2:0], cpu_div_ring[3] };
+   end
+
+   assign cpu_clken = cpu_div_ring[0];
+
    scmp cpu
    (
       .rst_n(cpu_rst_n),
       .clk(cpu_clk),
+      .clken(cpu_clken),
       .D_i(cpu_D_i),
       .sb(cpu_sb_i),
       .sa(cpu_sa_i),
