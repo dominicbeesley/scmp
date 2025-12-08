@@ -103,9 +103,10 @@ module tb_example;
                         dat = cpu_D_i;
                      end else if (!cpu_ADS_n || !cpu_WR_n) begin
                         dat = cpu_D_o;
-                     end else begin
-                        dat = 'b11111111;
-                     end
+                     end //else begin
+//                        dat = 'b11111111;
+//                     end
+//infinite bus hold
                      
                      ctl = { 1'b1, cpu_rst_n, cpu_s_i, cpu_sb_i, cpu_sa_i, 1'b0, cpu_ADS_n | !cpu_div_ring[3], 1'b1 };
 
