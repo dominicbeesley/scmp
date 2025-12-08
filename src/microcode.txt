@@ -222,6 +222,7 @@ LD:		NEXTPC=@LDI, COND_MASK=ADI, COND_XOR=ADI, CTL=COND_JMP		# test for LDI
 		NEXTPC=@EA, CTL=CALL
 		BUS=ADSRD
 		BUS=RD, LD_L=D
+		NEXTPC=NEXT										# DEAD cycle
 LDI:		NEXTPC=FETCH, WR_L=ALU, RD_L=ACC, LD_L=ACC, CTL=LOGICOP
 LDE:		NEXTPC=@LDI, RD_L=EXT, WR_L=RD_L, LD_L=D
 
@@ -229,6 +230,7 @@ ADD:		NEXTPC=@ADI, COND_MASK=ADI, COND_XOR=ADI, CTL=COND_JMP		# test for ADI
 		NEXTPC=@EA, CTL=CALL
 		BUS=ADSRD
 		BUS=RD, LD_L=D
+		NEXTPC=NEXT										# DEAD cycle
 ADI:		WR_L=ALU, RD_L=ACC, LD_L=D_ST_CY, ALU_OP=ADD_L
 		NEXTPC=FETCH, WR_L=ALU, RD_L=ACC, LD_L=D_ACC_STAT_CY, ALU_OP=ADD_H
 ADE:		NEXTPC=@ADI, RD_L=EXT, WR_L=RD_L, LD_L=D
@@ -237,6 +239,7 @@ CAD:		NEXTPC=@CAI, COND_MASK=ADI, COND_XOR=ADI, CTL=COND_JMP		# test for ADI
 		NEXTPC=@EA, CTL=CALL
 		BUS=ADSRD
 		BUS=RD, LD_L=D
+		NEXTPC=NEXT										# DEAD cycle		
 CAI:		RD_L=CONST_FF, WR_L=ALU, ALU_OP=XOR, LD_L=D			# complement D
 		WR_L=ALU, RD_L=ACC, LD_L=ACC_STAT_CYOV, ALU_OP=ADD
 		NEXTPC=FETCH	# DMB: Add dead cycle
@@ -247,6 +250,7 @@ DAD:		NEXTPC=@DAI, COND_MASK=ADI, COND_XOR=ADI, CTL=COND_JMP		# test for DAI
 		NEXTPC=@EA, CTL=CALL
 		BUS=ADSRD
 		BUS=RD, LD_L=D
+		NEXTPC=NEXT										# DEAD cycle
 DAI:		LD_L=D_ST_CY, WR_L=ALU, RD_L=CONST_66, ALU_OP=ADD_L		# add hex 66, DON'T suppress half carry
 		LD_L=D, WR_L=ALU, RD_L=CONST_66, ALU_OP=ADD_H			# add hex 66, DON'T suppress half carry
 		WR_L=ALU, RD_L=ACC, LD_L=D_ST_CY, ALU_OP=ADD_L, ALU_CY_IN=ZERO	# do the main add : Cy,HCy,A/D <= A + D + 66 + Cy
@@ -256,8 +260,7 @@ DAI:		LD_L=D_ST_CY, WR_L=ALU, RD_L=CONST_66, ALU_OP=ADD_L		# add hex 66, DON'T s
 DAE:		NEXTPC=@DAI, RD_L=EXT, WR_L=RD_L, LD_L=D
 
 #TODO-FIX EA to use 4 bit ALU / ADD
-EA:             NEXTPC=NEXT	# DMB: Add dead cycle
-		RD_L=EXT, LD_L=D, WR_L=RD_L, COND_MASK=RDL80, COND_XOR=RDL80, CTL=COND_LD			# if D=0x80 then replace with EXT
+EA:             RD_L=EXT, LD_L=D, WR_L=RD_L, COND_MASK=RDL80, COND_XOR=RDL80, CTL=COND_LD			# if D=0x80 then replace with EXT
 		NEXTPC=@EAPOSTINC1, RD_L=D, COND_MASK=POSTINC, COND_XOR=POSTINC, CTL=COND_JMP			# if op[2]='1' and +ve displacement do POSTINC
 EAR2:		LD_L=EAM_ADDR, LD_H=EAM_ADDR, RD_L=EA, RD_H=EA, WR_L=ALU, WR_H=INCR4, ALU_OP=ADD, ALU_CY_IN=ZERO# set address and EA if op[2] set
 		CTL=RET												# DEAD CYCLE to match postinc
@@ -270,6 +273,7 @@ ST:		NEXTPC=NEXT										# DEAD cycle
 		NEXTPC=@EA, CTL=CALL
 		BUS=ADSWR, WR_L=RD_L, LD_L=D, RD_L=ACC
 		BUS=WR
+		NEXTPC=NEXT										# DEAD cycle
 		NEXTPC=FETCH	# DMB: Add dead cycle
 
 DLD:
@@ -281,6 +285,7 @@ DLD:
 		NEXTPC=NEXT	# DMB: Add dead cycle
 		BUS=ADSWR, WR_L=ALU, LD_L=D_ACC, RD_L=ACC, ALU_OP=DEC
 		BUS=WR
+		NEXTPC=NEXT										# DEAD cycle
 		NEXTPC=FETCH	# DMB: Add dead cycle
 
 ILD:
@@ -292,6 +297,7 @@ ILD:
 		NEXTPC=NEXT	# DMB: Add dead cycle
 		BUS=ADSWR, WR_L=ALU, LD_L=D_ACC, RD_L=ACC, ALU_OP=INC
 		BUS=WR
+		NEXTPC=NEXT										# DEAD cycle
 		NEXTPC=FETCH	# DMB: Add dead cycle
 
 JMP:
