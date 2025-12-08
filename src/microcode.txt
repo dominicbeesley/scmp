@@ -214,8 +214,8 @@ FETCH:		LD_L=ADDR_PC, LD_H=ADDR_PC, RD_L=P0, RD_H=P0, WR_L=ALU, WR_H=INCR4, ALU_
 		BUS=RD, LD_L=D
 DECODE:		CTL=DECODE #decode step will jump to the instruction see scmp_microcode_oppc.sv
 
-ILLEGAL:
-		NEXTPC=FETCH
+ILLEGAL_CC_48:	NEXTPC=NEXT										# DEAD cycle
+ILLEGAL:	NEXTPC=FETCH
 
 # all loads lead to here and also all logical ops
 LD:		NEXTPC=@LDI, COND_MASK=ADI, COND_XOR=ADI, CTL=COND_JMP		# test for LDI
@@ -366,8 +366,8 @@ RRL:	NEXTPC=FETCH, ALU_CY_IN=STATUS, ALU_OP=RRL, RD_L=ACC, WR_L=ALU, LD_L=ACC_ST
 DECODER=
 
 #ILLEGALS
-11001100	ILLEGAL		# store and modify pc, others allowed but branch thru to their immediate equivalents
-01001000	ILLEGAL		# STE or possible XAE position
+11001100	ILLEGAL_CC_48		# store and modify pc, others allowed but branch thru to their immediate equivalents
+01001000	ILLEGAL_CC_48		# STE or possible XAE position
 
 #VALIDS
 
